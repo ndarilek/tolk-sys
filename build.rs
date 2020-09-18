@@ -19,7 +19,12 @@ fn main() -> io::Result<()> {
     let target = target.into_os_string().into_string().unwrap();
     for entry in fs::read_dir(libs)? {
         let path = entry.unwrap().path();
-        let file_name = path.file_name().unwrap().to_os_string().into_string().unwrap();
+        let file_name = path
+            .file_name()
+            .unwrap()
+            .to_os_string()
+            .into_string()
+            .unwrap();
         let out = format!("{}/{}", &target, &file_name);
         fs::copy(&path, out)?;
         let out = format!("{}/examples/{}", &target, &file_name);
@@ -30,6 +35,7 @@ fn main() -> io::Result<()> {
         .cpp(true)
         .define("_EXPORTING", "")
         .define("UNICODE", "")
+        .static_crt(true)
         .file(format!("{}/src/Tolk.cpp", root))
         .file(format!("{}/src/ScreenReaderDriverJAWS.cpp", root))
         .file(format!("{}/src/ScreenReaderDriverNVDA.cpp", root))
